@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Mail;
+// 导入第三方类库
+use Gregwar\Captcha\CaptchaBuilder;
 
 class RegisterController extends Controller
 {
@@ -27,6 +29,7 @@ class RegisterController extends Controller
     public function create()
     {
         //
+        echo 123;
     }
 
     /**
@@ -106,5 +109,24 @@ class RegisterController extends Controller
     public function jihuo(Request $request){
         echo "this is jihuo ".$request->input('id');
     }
+    
+    // 引入验证码
+    public function code(){
+        // 生成校验码代码
+        ob_clean();//清除操作
+        $builder= new CaptchaBuilder;
+        // 可以设置图片的宽高及字体
+        $builder->build($width = 100,$height = 40,$font = null);
+        // 获取验证码内容
+        $phrase=$builder->getPhrase();
+        //把内容存入session
+        session(['vcode'=>$phrase]);
+        // 生成图片
+        header("Cache-Control: no-cache, must-revalidate");
+        header('Content-Type: image/jpeg');
+        //输出校验码
+        $builder->output();
+        die;
+    } 
 }
  

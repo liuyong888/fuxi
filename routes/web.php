@@ -56,6 +56,8 @@ Route::group(["middleware"=>'login'],function(){
 //前台首页
 Route::resource("/","Home\IndexController");
 Route::resource("/homeindex","Home\IndexController");
+// 注册页面
+Route::resource("/homeregister","Home\RegisterController");
 // 发字符串邮件
 Route::get("/sendmail","Home\RegisterController@send_mail");
 // 发纯文本视图邮件
@@ -64,6 +66,8 @@ Route::get("/sendmail2","Home\RegisterController@send_mail2");
 // 激活
 Route::get("/jihuo","Home\RegisterController@jihuo");
 
+// 验证码测试
+Route::get("/code","Home\RegisterController@code");
 
 
 
