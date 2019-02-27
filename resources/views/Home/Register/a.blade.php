@@ -1,0 +1,1 @@
+<a href="http://www.project.com/jihuo?id={{$id}}">点击跳转</a>
