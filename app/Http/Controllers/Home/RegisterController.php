@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Hash;
 use Mail;
 // 导入第三方类库
 use Gregwar\Captcha\CaptchaBuilder;
@@ -28,8 +29,8 @@ class RegisterController extends Controller
      */
     public function create()
     {
-        //
-        echo 123;
+        // 加载注册模板
+        return view("Home.Register.register");
     }
 
     /**
@@ -41,8 +42,44 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
         //
+        // dd($request->all(),$vcode);
+        // 获取session校验码
+        $vcode=session('vcode');
+        // 获取用户输入校验码
+        $code=$request->input('code');
+        // 对比
+        if($code==$vcode){
+            if($request->input('password')==$request->input('repassword')){
+                $request->except(['repassword','code']);
+                $data['email']=$request->input('username');
+                $data['password']=Hash::make($request->input('password'));
+                $data['status']=0;//0代表未激活
+                $data['token']=rand(1,10000);
+                // dd($data);
+                // 获取插入数据的id
+                $id=DB::table('users')->insertGetId($data);
+                if($id){
+                    // echo 'ok';
+                    $res=self::send_mail3($data['email'],$id,$data['token']);
+                    if($res){
+                        echo "激活用户邮件已发送完成,请立即登录邮箱激活";
+                    }
+                }
+            }else{
+                return back()->with("error","两次密码不一致!");                
+            }
+        }else{
+            return back()->with("error","验证码有误！");
+        }
     }
-
+    // 用户激活
+    public function send_mail3($email,$id,$token){
+        Mail::send('Home.Register.jihuo',['id'=>$id,'token'=>$token],function($message)use($email){
+            $message->to("$email");
+            $message->subject('用户激活');
+        });
+        return true;
+    }
     /**
      * Display the specified resource.
      *
@@ -87,7 +124,7 @@ class RegisterController extends Controller
     {
         //
     }
-    // 字符串
+    // 字符串 (测试)
     public function send_mail(){
         // echo "yes";
         Mail::raw("this is a mail test",function($message){
@@ -97,7 +134,7 @@ class RegisterController extends Controller
             $message->subject('test');
         });
     }
-    // 纯文本视图
+    // 纯文本视图 (测试)
     public function send_mail2(){
         Mail::send('Home.Register.a',['id'=>10],function($message){
             $message->to('liuyong_0556@qq.com');
@@ -107,7 +144,19 @@ class RegisterController extends Controller
 
     // 激活
     public function jihuo(Request $request){
-        echo "this is jihuo ".$request->input('id');
+        $id=$request->input('id');
+        $token=$request->input('token');
+        // token验证
+        $info=DB::table('users')->where('id','=',$id)->first();
+        if($token==$info->token){
+            // 修改状态并重新赋值token
+            $data['status']=2;
+            $data['token']=rand(1,10000);
+            if(DB::table('users')->where('id','=',$id)->update($data)){
+                echo "用户已激活,请登录!";
+            }
+
+       }
     }
     
     // 引入验证码
@@ -126,7 +175,7 @@ class RegisterController extends Controller
         header('Content-Type: image/jpeg');
         //输出校验码
         $builder->output();
-        die;
+        // die;
     } 
 }
  

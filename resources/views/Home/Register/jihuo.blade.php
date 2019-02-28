@@ -1,0 +1,1 @@
+点击<a href="http://www.project.com/jihuo?id={{$id}}&token={{$token}}">激活用户</a>
