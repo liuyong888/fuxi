@@ -292,7 +292,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-								<h2>找回密码</h2>
+								<h2>重置密码</h2>
 							</div>
 						</div>
 					</div>
@@ -307,23 +307,32 @@
 								<div class="col-sm-6">
 									<div class="featured-box featured-box-secundary default info-content">
 										<div class="box-content">
-											<h4>找回密码</h4>
-											<form action="/do_forget" id="" method="post">
+											<h4>重置密码</h4>
+											<form action="/update_pwd" id="" method="post">
 											@if(session('error'))
 											<b style="color:red">{{session('error')}}</b>
 											@endif
 												<div class="row">
 													<div class="form-group">
 														<div class="col-md-12">
-															<label>邮箱地址</label>
-															<input type="text" name="email" class="form-control input-lg">
+															<label>新密码</label>
+															<input type="password" name="password" class="form-control input-lg">
 														</div>
 													</div>
-												</div>												
-												<div class="row">													
+												</div>
+												<div class="row">
+													<div class="form-group">
+														<div class="col-md-12">
+															<label>重复密码</label>
+															<input type="password" name="repassword" class="form-control input-lg">
+														</div>
+													</div>
+												</div>
+												<input type="hidden" name="id" value="{{$id}}">
+												<div class="row">
 													<div class="col-md-6">
 														{{csrf_field()}}
-														<input type="submit" value="发送邮件" class="btn btn-primary pull-right push-bottom" data-loading-text="Loading...">
+														<input type="submit" value="重置密码" class="btn btn-primary pull-right push-bottom" data-loading-text="Loading...">
 													</div>
 												</div>
 											</form>

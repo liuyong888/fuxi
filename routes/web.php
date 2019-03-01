@@ -56,10 +56,12 @@ Route::group(["middleware"=>'login'],function(){
 Route::resource("/login","Home\LoginController");
 // 忘记密码
 Route::get("/forget_pwd","Home\LoginController@forget");
-// 找回密码
-Route::post("/get_new_pwd","Home\LoginController@get_new_pwd");
+// 找回密码(发送邮件)
+Route::post("/do_forget","Home\LoginController@do_forget");
+// 加载重置密码
+Route::get("/reset_pwd_view","Home\LoginController@reset_pwd_view");
 // 重置密码
-Route::get("/reset_pwd","Home\LoginController@reset_pwd");
+Route::post("/update_pwd","Home\LoginController@update_pwd");
 
 //前台首页
 Route::resource("/","Home\IndexController");

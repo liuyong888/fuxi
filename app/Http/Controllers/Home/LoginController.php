@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 use Hash;
+use Mail;
+
 class LoginController extends Controller
 {
     /**
@@ -47,15 +49,16 @@ class LoginController extends Controller
             // echo "登录成功!";
             if(Hash::check($password,$info->password)){
                 if($info->status==2){
-                    echo "登录成功!";                                        
+                    // echo "登录成功!";  
+                    return redirect("/homeindex");                                    
                 }else{
-                    return back()->with("error","请先激活用户!");                    
+                    return back()->with("error","请先激活用户!");                  
                 }
             }else{
-            return back()->with("error","密码错误!");                
+                return back()->with("error","密码错误!");           
             }
         }else{
-            return back()->with("error","用户不存在!");            
+            return back()->with("error","用户不存在!");         
         }        
 
     }
@@ -109,14 +112,61 @@ class LoginController extends Controller
     public function forget(){
         return view("Home.Login.forget");
     }
+
     // 找回密码 (发送重置邮件)
-    public function get_new_pwd(Request $request){
+    public function do_forget(Request $request){
         // dd($request->all());
         // 发送邮件 重置密码
-        
+        $email=$request->input('email');
+        $info=DB::table('users')->where('email','=',$email)->first();
+        $id=$info->id;
+        $token=$info->token;
+        if(self::send_mail($email,$id,$token)){
+            echo "重置密码邮件发送成功,请立即前往该邮箱";            
+        }else{
+            echo "输入邮箱有误!";
+        }
     }
-    // 重置密码
-    public function reset_pwd(){
-        
+
+    // 发送邮件
+    public function send_mail($email,$id,$token){
+        Mail::send('Home.Login.reset_pwd',['email'=>$email,'id'=>$id,'token'=>$token],function($message)use($email){
+            $message->to("$email");
+            $message->subject("重置密码");
+        });
+        return true;
+    }
+
+    // 加载重置密码视图
+    public function reset_pwd_view(Request $request){
+        $id=$request->input('id');
+        $info=DB::table('users')->where('id','=',$id)->first();
+        // 对比邮件token和数据表的token
+        $token=$request->input('token');
+        if($info->token==$token){            
+            return view("Home.Login.reset_pwd_view",['id'=>$id]);
+        }else{
+            echo "数据异常,加载失败!";
+        }
     } 
+    // 修改密码
+    public function update_pwd(Request $request){
+        // dd($request->all());
+        $password=trim($request->input('password'));
+        $repassword=trim($request->input('repassword'));
+
+        if($password=='' || $repassword==''){
+            return back()->with("error","不能为空值或空格!");
+        }
+        
+        if($password == $repassword){
+            $data['token']=rand(1,10000);
+            $data['password']=Hash::make($password);
+            if(DB::table("users")->where('id','=',$request->input('id'))->update($data)){
+                return redirect("/login");
+            }
+        }else{
+            return back()->with("error","两次密码不一致!");
+        }           
+    }
 }
