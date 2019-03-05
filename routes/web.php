@@ -66,7 +66,7 @@ Route::post("/update_pwd","Home\LoginController@update_pwd");
 //前台首页
 Route::resource("/","Home\IndexController");
 Route::resource("/homeindex","Home\IndexController");
-// 注册页面
+// 注册页面(邮箱注册)
 Route::resource("/homeregister","Home\RegisterController");
 // 发字符串邮件
 Route::get("/sendmail","Home\RegisterController@send_mail");
@@ -78,6 +78,18 @@ Route::get("/jihuo","Home\RegisterController@jihuo");
 
 // 验证码测试
 Route::get("/code","Home\RegisterController@code");
+
+// 手机号码注册(调用短信接口)
+Route::resource("/phone_register","Home\phone_RegisterController");
+// 注册跳转
+Route::post("/homeregisters","Home\phone_RegisterController@homeregisters");
+// Ajax查看手机号是否存在
+Route::get("/check_phone","Home\phone_RegisterController@checkphone");
+// 发送短信验证码
+Route::get("/send_phone","Home\phone_RegisterController@sendphone");
+// 验证校验码
+Route::get("/check_code","Home\phone_RegisterController@checkcode");
+
 
 
 

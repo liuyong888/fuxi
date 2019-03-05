@@ -9,15 +9,16 @@ function sendphone($p){
 	// echo "this is send phone";
 	//初始化必填
 	//填写在开发者控制台首页上的Account Sid
-	$options['accountsid']='b70ea9ba6c9bcef4e612f0219d88e902';
+	$options['accountsid']='42582a0707f67143ccbd09c4498e6ea6';
 	//填写在开发者控制台首页上的Auth Token
-	$options['token']='4adbb781143f7fabc344b8fdc0cd73c5';
+	$options['token']='eb42f201d1a192c845b030dc39a57e36';
 
 	//初始化 $options必填
 	$ucpass = new Ucpaas($options);
-	$appid = "2d2451f503f442a8800682b4bc4d0063";	//应用的ID，可在开发者控制台内的短信产品下查看
-	$templateid = "399377";    //可在后台短信产品→选择接入的应用→短信模板-模板ID，查看该模板ID
+	$appid = "a8828ebb08184be6ba1b07595a6598db";	//应用的ID，可在开发者控制台内的短信产品下查看
+	$templateid = "400071";    //可在后台短信产品→选择接入的应用→短信模板-模板ID，查看该模板ID
 	$param = rand(1,10000); //多个参数使用英文逗号隔开（如：param=“a,b,c”），如为参数则留空
+	\Cookie::queue('fcode',$param,1);
 	$mobile = $p;
 	$uid = "";
 
