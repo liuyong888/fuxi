@@ -24,13 +24,26 @@ class IndexController extends Controller
         }
         return $data;
     } 
-    public function index()
+    public function index(Request $request)
     {
-        //获取顶级分类下的所有子类信息
-        $cate=self::getcatesbypid(0);
-        // dd($cate);
-        //加载前台首页模板
-        return view("Home.Index.index",['cate'=>$cate]);
+        if($request->ajax()){
+            $id=$request->input('id');
+            // echo $id;
+            $data=DB::table("goods")
+                        ->join("cates","cates.id","=","goods.typeid")
+                        ->select("cates.name as cname","cates.id as cid","goods.id as gid","goods.name as gname","goods.pic")
+                        ->where("goods.typeid","=",$id)
+                        ->get();
+            echo json_encode($data);
+        }else{            
+            //获取顶级分类下的所有子类信息
+            $cate=self::getcatesbypid(0);
+            // dd($cate);
+            $goods=DB::table("goods")->get();
+            // dd($goods);
+            //加载前台首页模板
+            return view("Home.Index.index",['cate'=>$cate]);
+        }       
         // 顶级分类
         // [
         //     'id'=>118,

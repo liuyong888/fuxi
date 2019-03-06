@@ -15,10 +15,14 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        //登录之前先销毁用户 
+        $request->session()->pull('email');
+        //获取分类的数据给模板
+        $cate=IndexController::getcatesbypid(0);
         //加载登录模板
-        return view("Home.Login.index");
+        return view("Home.Login.index",['cate'=>$cate]);
     }
 
     /**
@@ -50,6 +54,7 @@ class LoginController extends Controller
             if(Hash::check($password,$info->password)){
                 if($info->status==2){
                     // echo "登录成功!";  
+                    session(['email'=>$email]);
                     return redirect("/homeindex");                                    
                 }else{
                     return back()->with("error","请先激活用户!");                  
