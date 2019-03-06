@@ -66,6 +66,8 @@ Route::post("/update_pwd","Home\LoginController@update_pwd");
 //前台首页
 Route::resource("/","Home\IndexController");
 Route::resource("/homeindex","Home\IndexController");
+// 前台购物车
+Route::resource("/home_cart","Home\CartController");
 // 注册页面(邮箱注册)
 Route::resource("/homeregister","Home\RegisterController");
 // 发字符串邮件

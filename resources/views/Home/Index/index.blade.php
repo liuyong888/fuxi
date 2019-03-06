@@ -39,7 +39,9 @@
       <li class="ll" cid="{{$rows->id}}" name="{{$row->id}}">{{$rows->name}}</li>              
     @endforeach
     <div class="uid{{$row->id}}" style="width:400px;height:400px;border:1px solid red"> 
-        <!-- <img src="">  -->
+      @foreach($goods as $r)
+        <a href="/homeindex/{{$r->id}}"><img src="/static/homes/Goods/{{$r->pic}}" width="100px" height="100px"></a>
+      @endforeach
     </div>
 </div>
 @endforeach
@@ -65,7 +67,12 @@
         img.attr("src","/static/homes/Goods/"+res[i].pic);
         img.attr("width","100px");
         img.attr("height","100px");
-        $(".uid"+name).append(img);
+        // 创建a链接元素
+        a=$("<a></a>");
+        a.attr("href","/homeindex/"+res[i].gid);
+        a.html(img);
+        // 把内容追加到类名为uid 的div里
+        $(".uid"+name).append(a);
       }
     },'json');
   });

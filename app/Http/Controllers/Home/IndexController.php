@@ -39,10 +39,10 @@ class IndexController extends Controller
             //获取顶级分类下的所有子类信息
             $cate=self::getcatesbypid(0);
             // dd($cate);
-            $goods=DB::table("goods")->get();
+            $goods=DB::select("select * from goods limit 6");
             // dd($goods);
             //加载前台首页模板
-            return view("Home.Index.index",['cate'=>$cate]);
+            return view("Home.Index.index",['cate'=>$cate,'goods'=>$goods]);
         }       
         // 顶级分类
         // [
@@ -106,7 +106,13 @@ class IndexController extends Controller
      */
     public function show($id)
     {
-        //
+        //获取产品详情
+        // echo "这是详情数据".$id;
+        $info=DB::table("goods")->where('id','=',$id)->first();
+        // dd($info);
+        //获取分类的数据给模板
+        $cate=IndexController::getcatesbypid(0);
+        return view("Home.Info.index",['cate'=>$cate,'info'=>$info]);
     }
 
     /**
