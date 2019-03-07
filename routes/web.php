@@ -68,6 +68,10 @@ Route::resource("/","Home\IndexController");
 Route::resource("/homeindex","Home\IndexController");
 // 前台购物车
 Route::resource("/home_cart","Home\CartController");
+// 购物车减
+Route::get("/cart_minus/{id}","Home\CartController@minus");
+// 购物车加
+Route::get("/cart_add/{id}","Home\CartController@add");
 // 注册页面(邮箱注册)
 Route::resource("/homeregister","Home\RegisterController");
 // 发字符串邮件
