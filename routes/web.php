@@ -96,7 +96,8 @@ Route::get("/send_phone","Home\phone_RegisterController@sendphone");
 // 验证校验码
 Route::get("/check_code","Home\phone_RegisterController@checkcode");
 
-
+// Redis 测试
+Route::get("/redis_test","Home\IndexController@redis");
 
 
 

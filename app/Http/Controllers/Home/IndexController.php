@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Home;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Illuminate\Support\Facades\Redis;
+
 class IndexController extends Controller
 {
     /**
@@ -24,6 +26,7 @@ class IndexController extends Controller
         }
         return $data;
     } 
+    // 首页数据
     public function index(Request $request)
     {
         if($request->ajax()){
@@ -147,5 +150,14 @@ class IndexController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    // Redis 测试
+    public function redis(){
+        // echo "this is redis";
+
+        // 储存数据
+        // Redis::set('name','liuhui');
+        echo Redis::get('name');
     }
 }
