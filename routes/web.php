@@ -99,5 +99,8 @@ Route::get("/check_code","Home\phone_RegisterController@checkcode");
 // Redis 测试
 Route::get("/redis_test","Home\IndexController@redis");
 
+// curl
+Route::get('/curl',"Home\IndexController@curl");
+
 
 

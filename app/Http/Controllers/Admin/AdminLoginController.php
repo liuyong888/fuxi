@@ -50,8 +50,18 @@ class AdminLoginController extends Controller
             if(Hash::check($password,$info->password)){
                 // 登录信息写入session里
                 session(['name'=>$name]);
+                $uid=$info->id;
                 // 1.获取当前登录用户的所有权限列表
-                $list=DB::select("select n.name,n.mname,n.aname from user_role as ur,role_node as rn,node as n where ur.rid=rn.rid and rn.nid=n.id and ur.uid={$info->id}");
+                // (1)原始表达式
+                // $list=DB::select("select n.name,n.mname,n.aname from user_role as ur,role_node as rn,node as n where ur.rid=rn.rid and rn.nid=n.id and ur.uid={$uid}");
+                // (2)查询构造器
+                $list=DB::table('node')
+                            ->join('role_node','node.id','=','role_node.nid')
+                            ->join('user_role',function($join)use($uid){
+                                $join->on('role_node.rid','=','user_role.rid')
+                                     ->where('user_role.uid','=',$uid);
+                            })
+                            ->get();
                 // dd($list);
                 // 2.初始化权限列表
                 $nodeList['AdminController'][]='index';

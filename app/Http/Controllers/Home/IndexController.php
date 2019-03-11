@@ -160,4 +160,15 @@ class IndexController extends Controller
         // Redis::set('name','liuhui');
         echo Redis::get('name');
     }
+
+    // laravel结合curl 
+    public function curl(){
+        $curl="http://www.kuitao8.com/api/joke";
+        $mothed="get";
+        $post_data=0;
+        $data=curlGet($curl,$mothed,$post_data);
+        // echo $data;
+        $data=json_decode($data,true);
+        dd($data);
+    }
 }
